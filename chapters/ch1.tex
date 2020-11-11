@@ -1,0 +1,59 @@
+\chapter{Related Reading}\label{chap1}
+\section{Matrix Factorization} \label{sec1.1}
+Some of the most successful realizations of latent factor models are based on matrix factorization .In its basic form,matrix factorization characterizes both items and users by vectors of factors inferred from item rating patterns.
+
+Matrix factorization allows incorporation of additional information means when explicit features are not available then implicit features like user behaviour, search pattern, browser history can be incorporated.
+
+\subsection{A BASIC MATRIX FACTORIZATION MODEL\cite{mainpaper}}
+Matrix factorization models map both users and items
+to a joint latent factor space of dimensionality f, such that
+user-item interactions are modeled as inner products in
+that space.
+
+\[r_u_i = q_i^T*p_u\]
+    								Equation 1
+
+r_u_i = predicted rating by user u for item i
+
+q_i = feature vector for item i
+
+p_u = feature vector for user u
+
+The major challenge is computing the mapping of each item and user to factor vectors q_i , p_u \subset R_f.
+
+
+After that, rating of a item with respect to a user can easily be calculated using above equation.
+
+This model is closely related to SVD(single value decomposition). Applying SVD in collaborative filtering domain require factoring the user-item matrix. But user-item matrix is very sparse and contain many missing elements. Conventional SVD is undefined for such a matrix. This sparse matrix is also very prone to over-fitting. 
+
+Hence Stochastic gradient descent can be used to factorize the user-item matrix.
+
+\subsection{ADDING BIAS}
+
+Equation 1 can be modified to account for various bias in item popularity and user perception. Means there may be some users who tend to rate more or less than the average. The rating given by these users do not tell the actual popularity of the items. hence a bias need to be added. Also a item that in general do not suite the user but it is extremely popular currently. such items must be recommended to the user. hence a bias need to added.
+\[b_u_i = \mu + b_i + b_u\]
+
+The bias involved in rating rui is denoted by bui and accounts for the user and item effects. The overall average rating is denoted by u. The parameters bu and bi indicate the observed deviations of user u and item i, respectively,from the average.
+
+\subsection{TEMPORAL DYNAMICS}
+User perception may be changing with time means user may be used to give higher rating to items earlier but now he/she will a lower rating. Hence the bias related to this user must be dynamic(function of time).
+
+Similarly, item popularity may also be changing with time hence bias related to this item must also be dynamics.
+\[r̂ _u_i (t) = u + b_i (t) + b_u (t) + q_i p_u (t)\]
+
+
+\subsection{varing confidence level}
+It is possible people rating items are not very confident about their rating means same items shown to the same person can have different ratings. Hence a equation must be modified to take care of this fact also.
+\[min \Sigma C (r_u_i - \mu - b_u - b_i - q_i^T p_u )^2 + λ(|| q i ||^2 + || p u ||^2
++ b_u^2 + b_i^2 )\]
+
+\section{Predictive Music Shuffling Algorithm\cite{predictiveShuffling}}
+Most music players uses a minimal randomization algorithm known as Fisher-Yates algorithm.
+Fisher–Yates shuffling is similar to randomly picking numbered tickets out of a hat without replacement until there are none left.
+
+However, this does not account for any
+intuitive approach. we need a algorithm that can work according to user preference.
+
+For example, completely random algorithm can choose the same song again and again or can choose similar song one after another but we do not want this. we want a algorithm that can determine the next song based on user preference and action such as if he/she skipped the current song then next song must be different from this one.
+
+The following approach works on the ID3 tags of a sound track. ID3 tags include \textbf{artist, album, genre, song release date}. Based on these, 'nearness' factor of all the songs in the music library are calculated respective to the song first played by the user. The higher the value of the nearness factor, higher are its chances of being played next.The nearness factor is assigned based on 1 or 2-point increment to the default value of 0 corresponding to each matched tag of the two songs. The songs with a high value of nearness factor are played first. The nearness factor is calculated based on the weight generator algorithm. The time for which the current song is played also influences whether the ones similar to this would be played next or not
